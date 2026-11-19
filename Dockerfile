@@ -17,6 +17,9 @@ RUN apt-get update \
 RUN useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin app
 WORKDIR /app
 COPY --chown=root:root app/ /app/
+# Code is owned by root and read-only for the runtime user, independent of the
+# build host's umask.
+RUN chmod -R u=rwX,go=rX /app
 
 USER 10001
 EXPOSE 8080
