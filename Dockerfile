@@ -2,7 +2,7 @@
 # Alpine is used because the production registry (Harbor cicd-prod) refuses any
 # image with a High/Critical finding, and Debian slim carries many High CVEs
 # that have no upstream fix yet.
-FROM docker.io/library/python:3.12-alpine@sha256:c5ba3deef00c7758561a0f03c26f44f10589263d40e732b8748e0d1f38f6dd89
+FROM docker.io/library/python:3.15-alpine@sha256:0f9552bb28711333da16915ec146f5e6bb44a7fdac9ced15dc17c2e0206346dd
 
 LABEL org.opencontainers.image.title="tgh-cicd-demo" \
       org.opencontainers.image.description="CI/CD pipeline demo service"
