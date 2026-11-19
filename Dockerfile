@@ -1,5 +1,8 @@
 # Base image is pinned by digest; Dependabot proposes digest updates as PRs.
-FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+# Alpine is used because the production registry (Harbor cicd-prod) refuses any
+# image with a High/Critical finding, and Debian slim carries many High CVEs
+# that have no upstream fix yet.
+FROM docker.io/library/python:3.12-alpine@sha256:c5ba3deef00c7758561a0f03c26f44f10589263d40e732b8748e0d1f38f6dd89
 
 LABEL org.opencontainers.image.title="tgh-cicd-demo" \
       org.opencontainers.image.description="CI/CD pipeline demo service"
@@ -8,13 +11,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=8080
 
-# Apply Debian security updates published after the pinned base image was built.
+# Apply Alpine security updates published after the pinned base image was built.
 # (The release gate blocks HIGH/CRITICAL vulnerabilities that have a fix.)
-RUN apt-get update \
- && apt-get -y --no-install-recommends upgrade \
- && rm -rf /var/lib/apt/lists/*
+RUN apk upgrade --no-cache
 
-RUN useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin app
+RUN adduser -S -D -H -u 10001 -s /sbin/nologin app
 WORKDIR /app
 COPY --chown=root:root app/ /app/
 # Code is owned by root and read-only for the runtime user, independent of the
