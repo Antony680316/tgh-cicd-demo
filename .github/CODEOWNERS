@@ -1,0 +1,6 @@
+# Internal reviewers must approve every change. Pipeline and deployment
+# definitions additionally require the platform owner.
+*                 @Antony680316
+/Jenkinsfile      @Antony680316
+/deploy/          @Antony680316
+/.github/         @Antony680316

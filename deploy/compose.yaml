@@ -1,0 +1,17 @@
+# Rendered on the target host by the pipeline's Ansible playbook.
+# IMAGE_REF is always repository@sha256:digest (never a mutable tag).
+services:
+  app:
+    image: ${IMAGE_REF:?IMAGE_REF must be repository@sha256:digest}
+    container_name: ${APP_INSTANCE:-tgh-cicd-demo}
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    environment:
+      APP_VERSION: ${APP_VERSION:-unknown}
+      APP_ENV: ${APP_ENV:-test}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    tmpfs:
+      - /tmp
